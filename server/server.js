@@ -8,8 +8,9 @@ const chalk = require("chalk");
 const cors = require("cors");
 const express = require("express");
 const mongoose = require("mongoose");
+const moment = require("moment");
 const path = require("path");
-const { ApolloServer, gql } = require('apollo-server-express');
+const { ApolloServer, gql } = require("apollo-server-express");
 
 const myNetworkInterfaces = require("./helpers/networkInterfaces");
 
@@ -60,7 +61,7 @@ const app = express();
 
 const connectionString = process.env.MONGO_ATLAS_CONNECTION_STRING;
 
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || 8000;
 
 // // The GraphQL schema
 // const typeDefs = gql`
@@ -90,19 +91,20 @@ const server = new ApolloServer({
     //     query: defaultQuery,
     //   },
     // ],
-  },
+  }
 });
-
 
 server.applyMiddleware({ app });
 
 app.use(express.static("dist"));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-
+//
 // ROUTES
 // http://expressjs.com/en/starter/basic-routing.html
 app.get("/*", function(request, response) {
+  if (request.path === "/api/exercise/log")
+    return exerciseLogGet(request, response);
   response.sendFile(path.resolve(__dirname + "/../dist/index.html"), function(
     err
   ) {
@@ -132,24 +134,99 @@ app.get("/:hash", (req, res) => {
   });
 });
 
-app.get("/api/exercise/log", function(req, res) {
-  let userId = req.userId;
-  let from = req.from;
-  let to = req.to;
-  let limit = req.limit;
+const findbyExerciseId = function(exercise, callback) {};
+
+const callback = function(error, exercise) {
+  if (error) return next(error);
+  return res.render("exercise", exercise);
+};
+
+const exerciseLogGet = function(req, res, next) {
+  console.log("view `/api/exercise/log` req object");
+  // console.log(JSON.stringify(req, null, 2));
+  console.log(JSON.stringify(req.query, null, 2));
+  const {
+    userId,
+    from = "2018-01-28T07:45:01.343Z",
+    to = new Date(),
+    limit = 20
+  } = req.query;
+  if (userId === "undefined" || userId === undefined) {
+    res.json({ data: "Not Found" });
+    return;
+  }
+
+  Exercise.find({
+    userId: userId,
+    createdAt: {
+      $gte: new Date(from).toISOString(),
+      $lte: new Date(to).toISOString()
+    }
+  })
+    .sort({ updatedAt: -1 })
+    .limit(parseInt(limit, 10))
+    .exec(function(error, docs) {
+      console.log("INSIDE FIND");
+      if (error) return console.error(error);
+      console.log(JSON.stringify(docs));
+      // return res.json({ data: { message: "suckaaaa" } });
+      return res.json(docs);
+    });
+
+  // Find all
+
+  // Exercise.find().exec(function(error, docs) {
+  //   console.log("INSIDE FIND ALL");
+  //   if (error) return next(error);
+  //   console.log(JSON.stringify(docs));
+  //   // return res.json({ data: { message: "suckaaaa" } });
+  //   return res.json(docs);
+  // });
+
+  // Exercise.find({
+  //   userId,
+  //   $and: [
+  //     {
+  //       createdAt: {
+  //         $gte: rfc822DateFrom,
+  //         $lte: rfc822DateTo
+  //       }
+  //     }
+  //   ]
+  // }).exec(function(error, docs) {
+  //   console.log("INSIDE FIND");
+  //   if (error) return next(error);
+  //   console.log(JSON.stringify(docs));
+  //   // return res.json({ data: { message: "suckaaaa" } });
+  //   return res.json(docs);
+  // });
+};
+// {
+//   userId
+// },
+
+// Exercise.findOne({ _id: exerciseId }, function(error, exercise) {
+//   if (error) return next(error);
+//   return res.json(exercise);
+// });
+
+// PSUEDO:
+// if, from, to, and limit are absent get all of the user's exercises
+// };
+
+app.post("/api/user", function(req, res, next) {
+  console.log("view `/api/user` req object");
+  // console.log(JSON.stringify(req, null, 2));
+  console.log(JSON.stringify(req.query, null, 2));
+  const { userId } = req.query;
+
+  ExerciseUser.findOne({ _id: userId }, function(error, user) {
+    if (error) return next(error);
+    return res.json(user);
+  });
 
   // PSUEDO:
   // if, from, to, and limit are absent get all of the user's exercises
-});
-
-app.post("/api/getShortLink", (req, res, next) => {
-  // const { hash } = req.body;
-  console.log("hash");
-  console.log(req.body);
-  // const id = atob(hash);
-  // let shortLink = {hash: baseId, }
-  // TODO: add the host data
-  res.send(req.body);
 });
 
 app.post("/api/exercise/new-user", function(req, res, next) {
@@ -181,8 +258,7 @@ app.post("/api/exercise/new-user", function(req, res, next) {
         .bold("\n      SAVING EXERCISE    \n")
     );
     // guard-if statement to block execution if an error is detected
-    if (err) return console.error(err);
-
+    if (err) return new Error(err); //JSON.stringify(err))
     let { username: usernameFromResponse, _id: userId } = doc;
 
     // log the doc returned from mongo?
@@ -317,8 +393,6 @@ app.post("/shorten", (req, res, next) => {
   });
 });
 
-var network = require("network");
-
 // ROUTES
 // listen for requests :)
 const listener = app.listen(process.env.PORT, function() {
@@ -357,7 +431,7 @@ const db = mongoose.connect(
 db.then(
   database => {
     console.log("we're connected to mongoDB!");
-    log(Date.now())
+    log(Date.now());
     // log(
     //   `
     //   host: ${database.connections[0]}

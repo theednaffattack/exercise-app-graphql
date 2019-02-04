@@ -8,7 +8,7 @@ const RoundedBanner = styled(Banner)`
   border-radius: 25px;
 `;
 
-const AddExercise = props => (
+const AddUser = props => (
   <Box bg="blue" color="white" p={4} width={[1, 1, 1 / 2]}>
     <Heading f={[4, 5, 6, 7]}>Add User</Heading>
     <Flex flexWrap="wrap" mx={-2}>
@@ -19,4 +19,4 @@ const AddExercise = props => (
   </Box>
 );
 
-export default AddExercise;
+export default AddUser;

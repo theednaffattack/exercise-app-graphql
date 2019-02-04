@@ -139,22 +139,26 @@ const UriForm = props => {
       </form>
       <h1>Returned Data</h1>
       <h4>
-        {JSON.stringify(props, null, 2)}
-        <p>
-          {window
-            ? JSON.stringify("===WINDOW===", window.location, null, 2)
-            : ""}
-        </p>
-        {status ? (
-          <a href={`/api/exercise/log?${status.username}`}>
-            {`${window.location.origin}/api/exercise/log?${JSON.stringify(
-              status,
-              null,
-              2
-            )}`}
-          </a>
+        {window ? (
+          <div>
+            <Text>===WINDOW===</Text>{" "}
+            {JSON.stringify(window.location.href, null, 2)}
+          </div>
         ) : (
-          "ksdfjksadjfk"
+          ""
+        )}
+        {status ? (
+          <div>
+            <Text color="white">User Added</Text>
+            <a
+              href={`/api/exercise/log?${status.usernameFromResponse}`}
+              style={{ color: "yellow" }}
+            >
+              {`${window.location.origin}/api/exercise/log?${status.userId}`}
+            </a>
+          </div>
+        ) : (
+          <div />
         )}
       </h4>
     </div>

@@ -10,6 +10,7 @@ import Home from "./Home";
 import Dashboard from "./Dashboard";
 import Exercises from "./Exercises";
 import AddExercise from "./AddExercise";
+import ExerciseLog from "./ExerciseLog";
 import AddUser from "./AddUser";
 
 injectGlobal`
@@ -67,6 +68,7 @@ class App extends Component {
               <NavLink to="api/exercise">Exercise</NavLink>{" "}
               <NavLink to="api/exercises/newUser">User</NavLink>{" "}
               <NavLink to="api/exercises/add">Add Exercise</NavLink>
+              <NavLink to="exercise/log">Log</NavLink>
             </Box>
             {/* </nav> */}
             <PosedRouter>
@@ -74,6 +76,7 @@ class App extends Component {
               <Dashboard path="dashboard" />
               <AddExercise path="api/exercises/add" />
               <AddUser path="api/exercises/newUser" />
+              <ExerciseLog path="exercise/log" />
             </PosedRouter>
           </Box>
         </Flex>
