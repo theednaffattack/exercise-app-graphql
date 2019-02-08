@@ -36,15 +36,15 @@ module.exports = () => {
     plugins: [
       new HtmlWebpackPlugin({
         template: "./client/src/index.html"
-      }),
-      new webpack.DefinePlugin({
-        "process.env.GITHUB_CLIENT_ID": JSON.stringify(env.GITHUB_CLIENT_ID)
-      }),
-      new webpack.DefinePlugin({
-        "process.env.GITHUB_CALLBACK_PORT": JSON.stringify(
-          env.GITHUB_CALLBACK_PORT
-        )
       })
+      // new webpack.DefinePlugin({
+      //   "process.env.GITHUB_CLIENT_ID": JSON.stringify(env.GITHUB_CLIENT_ID)
+      // }),
+      // new webpack.DefinePlugin({
+      //   "process.env.GITHUB_CALLBACK_PORT": JSON.stringify(
+      //     env.GITHUB_CALLBACK_PORT
+      //   )
+      // })
     ]
   };
 };
