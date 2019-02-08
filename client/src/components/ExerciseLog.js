@@ -54,7 +54,7 @@ export class ExerciseFetcher extends Component {
               <Flex flexDirection="column">
                 <UserFetcher userId={parsedSearch.userId} />
                 <h1 style={{ color: "white" }}> Exercises</h1>
-                {data ? (
+                {data.length > 0 ? (
                   <Flex flexDirection="row">
                     {data.map(exercise => (
                       <Box bg="white" color="blue" p={3} m={3}>
@@ -89,7 +89,7 @@ export class UserFetcher extends Component {
             {({ data }) => data.username}
           </Fetch>
         ) : (
-          <span>waiting for userId loading...</span>
+          <span>waiting for userId...</span>
         )}
       </Text>
     );

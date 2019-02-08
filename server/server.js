@@ -109,7 +109,7 @@ app.get("/*", function(request, response) {
     err
   ) {
     if (err) {
-      res.status(500).send(err);
+      response.status(500).send(err);
     }
   });
 });
@@ -151,9 +151,12 @@ const exerciseLogGet = function(req, res, next) {
     to = new Date(),
     limit = 20
   } = req.query;
-  if (userId === "undefined" || userId === undefined) {
-    res.json({ data: "Not Found" });
-    return;
+  if (
+    req.query == undefined ||
+    userId === "undefined" ||
+    userId === undefined
+  ) {
+    return res.json({ data: "Not Found" });
   }
 
   Exercise.find({
