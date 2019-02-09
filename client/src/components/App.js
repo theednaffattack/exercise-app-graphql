@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Box, Flex, Heading, Position, Provider } from "rebass";
+import { Box, Flex, Heading, Position, Provider, Text } from "rebass";
 import posed, { PoseGroup } from "react-pose";
 import { Router, Link, Location } from "@reach/router";
 import { injectGlobal, styled } from "styled-components";
@@ -8,9 +8,9 @@ import theme from "../styles/theme";
 import "../styles/App.css";
 import Home from "./Home";
 import Dashboard from "./Dashboard";
-import Exercises from "./Exercises";
+// import Exercises from "./Exercises";
 import AddExercise from "./AddExercise";
-import ExerciseLog from "./ExerciseLog";
+import { ExerciseLog } from "./ExerciseLog";
 import AddUser from "./AddUser";
 
 injectGlobal`
@@ -47,7 +47,12 @@ const NavLink = props => (
       // anchor element's props
       return {
         style: {
-          color: isCurrent ? "red" : "blue"
+          color: isCurrent ? "red" : "blue",
+          paddingBottom: "3px",
+          borderBottom: isCurrent ? "4px goldenrod solid" : undefined,
+          margin: "4px 8px 2px 0",
+          textDecoration: "none",
+          fontSize: "1.3rem"
         }
       };
     }}
@@ -58,19 +63,23 @@ class App extends Component {
   render() {
     return (
       <Provider theme={theme}>
-        <Flex bg="violet" m={0}>
-          <Box flex={1} color="text" bg="violet">
-            <Box flex={1} color="text" bg="gray">
+        <Flex
+          flexDirection="column"
+          flex="auto"
+          bg="violet"
+          m={0}
+          style={{ minHeight: "100vh" }}
+        >
+          <Box flex={1} color="text" bg="gray" width={[1]}>
+            <Box flex={1} color="text" width="1024px" mx="auto" mb={3}>
               <Heading>Exercise Tracker</Heading>
-              {/* <nav p={3} bg="#eee" position="relative"> */}
-              <NavLink to="/">Home</NavLink>{" "}
-              <NavLink to="dashboard">Dashboard</NavLink>{" "}
+              <NavLink to="/api/exercises/newUser">Home</NavLink>{" "}
+              {/* <NavLink to="dashboard">Dashboard</NavLink>{" "}
               <NavLink to="api/exercise">Exercise</NavLink>{" "}
               <NavLink to="api/exercises/newUser">User</NavLink>{" "}
               <NavLink to="api/exercises/add">Add Exercise</NavLink>
-              <NavLink to="exercise/log">Log</NavLink>
+              <NavLink to="exercise/log">Log</NavLink> */}
             </Box>
-            {/* </nav> */}
             <PosedRouter>
               <Home path="/" />
               <Dashboard path="dashboard" />

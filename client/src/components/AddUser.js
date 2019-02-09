@@ -9,10 +9,16 @@ const RoundedBanner = styled(Banner)`
 `;
 
 const AddUser = props => (
-  <Box bg="blue" color="white" p={4} width={[1, 1, 1 / 2]}>
-    <Heading f={[4, 5, 6, 7]}>Add User</Heading>
-    <Flex flexWrap="wrap" mx={-2}>
-      <Box px={2} py={2} width={[1, 1, 1]}>
+  <Box bg="blue" color="white" p={4} width={[1]} style={{ minHeight: "100vh" }}>
+    <Flex
+      flexWrap="wrap"
+      mx={-2}
+      flexDirection="column"
+      width="1024px"
+      mx="auto"
+    >
+      <Heading f={[4, 5, 6, 7]}>Add User</Heading>
+      <Box px={2} py={2} width="500px">
         <AddUserFormContainer />
       </Box>
     </Flex>

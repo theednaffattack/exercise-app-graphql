@@ -91,15 +91,17 @@ const ErrorLabel = styled.span`
   display: inline-block;
 `;
 
-const UriForm = props => {
+const AddExerciseForm = props => {
   const {
     values,
     touched,
+    onError,
     errors,
     dirty,
     isSubmitting,
     handleChange,
     setFieldValue,
+    onLoadMore,
     hanldeBlur,
     handleSubmit,
     handleReset,
@@ -108,13 +110,13 @@ const UriForm = props => {
   } = props;
 
   return (
-    <div>
+    <Flex flexDirection="column">
       <form className="" onSubmit={handleSubmit}>
         <div>
           {/* <StyledInputLabel htmlFor="userId">User ID</StyledInputLabel> */}
           <StyledInput
             name="userId"
-            type="text"
+            type="hidden"
             className={`form-control ${errors.userId &&
               touched.userId &&
               "is-invalid"}`}
@@ -193,24 +195,21 @@ const UriForm = props => {
         {/* <SubmitButton type="submit">
           {isSubmitting ? "WAIT PLZ" : "SUBMIT"}
         </SubmitButton> */}
-        <ButtonOutline mx={1} my={3} color="indigo">
+        <ButtonOutline mx={1} my={3} color="indigo" bg="white">
           {isSubmitting ? "WAIT PLZ" : "SUBMIT"}
         </ButtonOutline>
-        <DisplayFormikState {...props} />
+        {/* <DisplayFormikState {...props} /> */}
       </form>
-      <h1>Returned Data</h1>
       <h4>
-        {JSON.stringify(props, null, 2)}
-        {window ? JSON.stringify("===WINDOW===", window.location, null, 2) : ""}
         {status ? (
           <a href={`/api/exercise/log?${status.userId}`}>
             {`${window.location.origin}/api/exercise/log?${status.userId}`}
           </a>
         ) : (
-          "ksdfjksadjfk"
+          ""
         )}
       </h4>
-    </div>
+    </Flex>
   );
 };
 
@@ -234,41 +233,31 @@ export default withFormik({
 
   handleSubmit: (
     values,
-    { resetForm, setStatus, setErrors, setSubmitting }
+    { resetForm, setStatus, setErrors, setSubmitting, props }
   ) => {
-    console.log("handleSubmit");
-    console.log(JSON.stringify(values));
     postData("/api/exercise/add", values)
-      // postData('http://192.168.180.162:8080/shorten', values)
       .then(data => {
-        // postData('http://192.168.180.248:8080/api/getShortLink', { hash: e.target.value })
-        // if (data.errors) {
-        //   return () => {
-        //     this.setState({ errors: { msg: data.errors } }, () => console.error(`state in 'then-if' ${this.state}`));
-        //   };
-        // }
         console.log(`data ${JSON.stringify(data, null, 2)}`);
+        console.log("onLoadMore!!!");
+        // onLoadMore();
         // return data;
         if (data.errors) {
-          return () => {
-            this.setState({ errors: { msg: data.errors } }, () =>
-              console.error(`state in 'then-if' ${this.state}`)
-            );
-          };
+          // return onError({ error: data.errors });
+          console.log("an ERROR occurred");
+          return props.onError({ error: data.errors });
+          // return () => {
+          //   onError({ error: data.errors });
+          // };
         }
+        props.onLoadMore();
         setStatus(data);
-        console.log(`state in 'then' ${JSON.stringify(data)}`);
-        console.log(data);
         resetForm({});
         // if (data == { errors: { msg: error } })
-      }) // JSON from `response.json()` call
-      .catch(error => console.error(error));
+      })
+      .catch(error => {
+        console.error(error);
+      });
+    console.log("tried to execute a requery");
     setSubmitting(false);
-
-    // setTimeout(() => {
-    //   // alert(JSON.stringify(values, null, 2));
-    //   JSON.stringify(values, null, 2);
-    //   setSubmitting(false);
-    // }, 1000);
   }
-})(UriForm);
+})(AddExerciseForm);

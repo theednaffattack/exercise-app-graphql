@@ -23,7 +23,7 @@ const { log } = console;
 //   chalk
 //     .bgHex("#89CFF0")
 //     .hex("#36454F")
-//     .bold("\n   👍🏾   inside POST /api/exercises/add   👍🏾  \n")
+//     .bold("\n   👍🏾   inside POST /api/exercise/add   👍🏾  \n")
 // );
 
 const whitelist = [
@@ -66,35 +66,20 @@ const connectionString = process.env.MONGO_ATLAS_CONNECTION_STRING.replace(
 
 const port = process.env.PORT || 8000;
 
-// // The GraphQL schema
-// const typeDefs = gql`
-//   type Query {
-//     "A simple type for getting started!"
-//     hello: String
-//   }
-// `;
-
-// // A map of functions which return data for the schema.
-// const resolvers = {
-//   Query: {
-//     hello: () => 'world'
-//   }
-// };
-
 const server = new ApolloServer({
   typeDefs,
-  resolvers,
-  playground: {
-    // settings: {
-    //   'editor.theme': 'light',
-    // },
-    // tabs: [
-    //   {
-    //     endpoint,
-    //     query: defaultQuery,
-    //   },
-    // ],
-  }
+  resolvers
+  // playground: {
+  //   // settings: {
+  //   //   'editor.theme': 'light',
+  //   // },
+  //   // tabs: [
+  //   //   {
+  //   //     endpoint,
+  //   //     query: defaultQuery,
+  //   //   },
+  //   // ],
+  // }
 });
 
 server.applyMiddleware({ app });
@@ -148,6 +133,11 @@ const exerciseLogGet = function(req, res, next) {
   console.log("view `/api/exercise/log` req object");
   // console.log(JSON.stringify(req, null, 2));
   console.log(JSON.stringify(req.query, null, 2));
+  if (!req.query.hasOwnProperty("userId")) {
+    // console.log("whooo" + "\n" + JSON.stringify(req.query, null, 2));
+    console.log("reached no userID if statement");
+    return res.json({ message: "Expected a `userId` key in this request" });
+  }
   const {
     userId,
     from = "2018-01-28T07:45:01.343Z",
@@ -178,47 +168,7 @@ const exerciseLogGet = function(req, res, next) {
       // return res.json({ data: { message: "suckaaaa" } });
       return res.json(docs);
     });
-
-  // Find all
-
-  // Exercise.find().exec(function(error, docs) {
-  //   console.log("INSIDE FIND ALL");
-  //   if (error) return next(error);
-  //   console.log(JSON.stringify(docs));
-  //   // return res.json({ data: { message: "suckaaaa" } });
-  //   return res.json(docs);
-  // });
-
-  // Exercise.find({
-  //   userId,
-  //   $and: [
-  //     {
-  //       createdAt: {
-  //         $gte: rfc822DateFrom,
-  //         $lte: rfc822DateTo
-  //       }
-  //     }
-  //   ]
-  // }).exec(function(error, docs) {
-  //   console.log("INSIDE FIND");
-  //   if (error) return next(error);
-  //   console.log(JSON.stringify(docs));
-  //   // return res.json({ data: { message: "suckaaaa" } });
-  //   return res.json(docs);
-  // });
 };
-// {
-//   userId
-// },
-
-// Exercise.findOne({ _id: exerciseId }, function(error, exercise) {
-//   if (error) return next(error);
-//   return res.json(exercise);
-// });
-
-// PSUEDO:
-// if, from, to, and limit are absent get all of the user's exercises
-// };
 
 app.post("/api/user", function(req, res, next) {
   console.log("view `/api/user` req object");
@@ -230,9 +180,6 @@ app.post("/api/user", function(req, res, next) {
     if (error) return next(error);
     return res.json(user);
   });
-
-  // PSUEDO:
-  // if, from, to, and limit are absent get all of the user's exercises
 });
 
 app.post("/api/exercise/new-user", function(req, res, next) {
@@ -240,7 +187,7 @@ app.post("/api/exercise/new-user", function(req, res, next) {
     chalk
       .bgHex("#89CFF0")
       .hex("#36454F")
-      .bold("\n   👍🏾   inside POST /api/exercises/new-user   👍🏾  \n")
+      .bold("\n   👍🏾   inside POST /api/exercise/new-user   👍🏾  \n")
   );
   log(req.body);
 
@@ -295,7 +242,7 @@ app.post("/api/exercise/add", function(req, res, next) {
     chalk
       .bgHex("#89CFF0")
       .hex("#36454F")
-      .bold("\n   👍🏾   inside POST /api/exercises/add   👍🏾  \n")
+      .bold("\n   👍🏾   inside POST /api/exercise/add   👍🏾  \n")
   );
   log(req.body);
 

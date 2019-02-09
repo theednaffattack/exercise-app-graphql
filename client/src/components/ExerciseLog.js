@@ -1,8 +1,7 @@
-import React, { Component } from "react";
-import { Box, Flex, Text } from "rebass";
-import { Fetch } from "react-data-fetching";
+import React from "react";
+import { Flex } from "rebass";
 import queryString from "query-string";
-import axios from "axios";
+import { ExerciseFetcher } from "./ExerciseFetcher";
 
 let whatevs = queryString.parse(window.location);
 
@@ -14,7 +13,7 @@ const FETCH_STATE = {
   ERROR: "error"
 };
 
-class ExerciseLog extends Component {
+export class ExerciseLog extends React.Component {
   constructor(props) {
     super(props);
     this.handleClick = this.handleClick.bind(this);
@@ -23,7 +22,8 @@ class ExerciseLog extends Component {
       message: { text: "Sample message" },
       fetchState: FETCH_STATE.INITIAL,
       errors: this.props.errors,
-      search: this.props.search
+      search: this.props.search,
+      reach: this.props
     };
   }
 
@@ -33,66 +33,11 @@ class ExerciseLog extends Component {
   }
   render() {
     return (
-      <div>
+      <Flex bg="blue" style={{ minHeight: "100vh" }} flexDirection="column">
         <ExerciseFetcher passProps={this.props} />
-      </div>
+      </Flex>
     );
   }
 }
 
-export class ExerciseFetcher extends Component {
-  render() {
-    let {
-      location: { pathname, search }
-    } = this.props.passProps;
-    let parsedSearch = queryString.parse(search);
-    return (
-      <div>
-        {pathname ? (
-          <Fetch method="GET" url={"/api" + pathname + search}>
-            {({ data }) => (
-              <Flex flexDirection="column">
-                <UserFetcher userId={parsedSearch.userId} />
-                <h1 style={{ color: "white" }}> Exercises</h1>
-                {data.length > 0 ? (
-                  <Flex flexDirection="row">
-                    {data.map(exercise => (
-                      <Box bg="white" color="blue" p={3} m={3}>
-                        <Text color="black">{exercise.description}</Text>
-                        <Text>{exercise.duration}</Text>
-                        <Text>{exercise.createdAt}</Text>
-                        <Text> {exercise.updatedAt}</Text>
-                      </Box>
-                    ))}
-                  </Flex>
-                ) : (
-                  "loading..."
-                )}
-              </Flex>
-            )}
-          </Fetch>
-        ) : (
-          ""
-        )}
-      </div>
-    );
-  }
-}
-
-export class UserFetcher extends Component {
-  render() {
-    let { userId } = this.props;
-    return (
-      <Text color="white">
-        {userId ? (
-          <Fetch method="POST" url={`/api/user?userId=${userId}`}>
-            {({ data }) => data.username}
-          </Fetch>
-        ) : (
-          <span>waiting for userId...</span>
-        )}
-      </Text>
-    );
-  }
-}
-export default ExerciseLog;
+// export default ExerciseLog;

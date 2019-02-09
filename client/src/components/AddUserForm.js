@@ -1,9 +1,10 @@
 import React from "react";
 import { Box, ButtonOutline as Btn, Flex, Text } from "rebass";
+import { navigate } from "@reach/router";
 import * as Yup from "yup";
 import styled from "styled-components";
 import { withFormik } from "formik";
-import DisplayFormikState from "./DisplayFormikState";
+// import DisplayFormikState from "./DisplayFormikState";
 
 const postData = (url = "", data = {}) =>
   fetch(url, {
@@ -135,18 +136,9 @@ const UriForm = props => {
         <ButtonOutline mx={1} my={3} color="indigo">
           {isSubmitting ? "WAIT PLEASE" : "SUBMIT"}
         </ButtonOutline>
-        <DisplayFormikState {...props} />
+        {/* <DisplayFormikState {...props} /> */}
       </form>
-      <h1>Returned Data</h1>
       <h4>
-        {window ? (
-          <div>
-            <Text>===WINDOW===</Text>{" "}
-            {JSON.stringify(window.location.href, null, 2)}
-          </div>
-        ) : (
-          ""
-        )}
         {status ? (
           <div>
             <Text color="white">User Added</Text>
@@ -166,10 +158,6 @@ const UriForm = props => {
 };
 
 export default withFormik({
-  // mapPropsToValues: props => ({
-  //   uri: props.uri.uri
-  // }),
-
   validationSchema: Yup.object().shape({
     // uri: Yup.string()
     //   .url("Invalid URI format")
@@ -187,18 +175,8 @@ export default withFormik({
     values,
     { resetForm, setStatus, setErrors, setSubmitting }
   ) => {
-    console.log("handleSubmit");
-    console.log(JSON.stringify(values));
     postData("/api/exercise/new-user", values)
-      // postData('http://192.168.180.162:8080/shorten', values)
       .then(data => {
-        // postData('http://192.168.180.248:8080/api/getShortLink', { hash: e.target.value })
-        // if (data.errors) {
-        //   return () => {
-        //     this.setState({ errors: { msg: data.errors } }, () => console.error(`state in 'then-if' ${this.state}`));
-        //   };
-        // }
-        console.log(`data ${JSON.stringify(data, null, 2)}`);
         // return data;
         if (data.errors) {
           return () => {
@@ -207,19 +185,12 @@ export default withFormik({
             );
           };
         }
-        console.log(`state in 'then' ${JSON.stringify(data)}`);
         console.log(data);
         resetForm({});
-        setStatus(data);
-        // if (data == { errors: { msg: error } })
-      }) // JSON from `response.json()` call
+
+        navigate(`/exercise/log?userId=${data.userId}`);
+      })
       .catch(error => console.error(error));
     setSubmitting(false);
-
-    // setTimeout(() => {
-    //   // alert(JSON.stringify(values, null, 2));
-    //   JSON.stringify(values, null, 2);
-    //   setSubmitting(false);
-    // }, 1000);
   }
 })(UriForm);
