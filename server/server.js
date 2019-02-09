@@ -59,7 +59,10 @@ const { ExerciseUser } = require("./models/ExerciseUser");
 
 const app = express();
 
-const connectionString = process.env.MONGO_ATLAS_CONNECTION_STRING;
+const connectionString = process.env.MONGO_ATLAS_CONNECTION_STRING.replace(
+  "'",
+  ""
+);
 
 const port = process.env.PORT || 8000;
 
