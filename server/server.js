@@ -131,29 +131,22 @@ const callback = function(error, exercise) {
 
 const exerciseLogGet = function(req, res, next) {
   console.log("view `/api/exercise/log` req object");
-  // console.log(JSON.stringify(req, null, 2));
-  console.log(JSON.stringify(req.query, null, 2));
-  if (!req.query.hasOwnProperty("userId")) {
-    // console.log("whooo" + "\n" + JSON.stringify(req.query, null, 2));
-    console.log("reached no userID if statement");
-    return res.json({ message: "Expected a `userId` key in this request" });
+  if (!req.query.hasOwnProperty("_id")) {
+    console.log("reached no _id if statement");
+    return res.json({ message: "Expected a `_id` key in this request" });
   }
   const {
-    userId,
+    _id,
     from = "2018-01-28T07:45:01.343Z",
     to = new Date(),
     limit = 20
   } = req.query;
-  if (
-    req.query == undefined ||
-    userId === "undefined" ||
-    userId === undefined
-  ) {
+  if (req.query == undefined || _id === "undefined" || _id === undefined) {
     return res.json({ data: "Not Found" });
   }
 
   Exercise.find({
-    userId: userId,
+    _id: _id,
     createdAt: {
       $gte: new Date(from).toISOString(),
       $lte: new Date(to).toISOString()
@@ -174,9 +167,9 @@ app.post("/api/user", function(req, res, next) {
   console.log("view `/api/user` req object");
   // console.log(JSON.stringify(req, null, 2));
   console.log(JSON.stringify(req.query, null, 2));
-  const { userId } = req.query;
+  const { _id } = req.query;
 
-  ExerciseUser.findOne({ _id: userId }, function(error, user) {
+  ExerciseUser.findOne({ _id: _id }, function(error, user) {
     if (error) return next(error);
     return res.json(user);
   });
@@ -212,7 +205,7 @@ app.post("/api/exercise/new-user", function(req, res, next) {
     );
     // guard-if statement to block execution if an error is detected
     if (err) return new Error(err); //JSON.stringify(err))
-    let { username: usernameFromResponse, _id: userId } = doc;
+    let { username, _id } = doc;
 
     // log the doc returned from mongo?
     log(
@@ -229,8 +222,8 @@ app.post("/api/exercise/new-user", function(req, res, next) {
       statusTxt: "OK"
     });
     res.send({
-      usernameFromResponse,
-      userId,
+      username,
+      _id,
       status: 200,
       statusTxt: "OK"
     });
@@ -246,10 +239,10 @@ app.post("/api/exercise/add", function(req, res, next) {
   );
   log(req.body);
 
-  let { userId, date, description, duration } = req.body;
+  let { _id, date, description, duration } = req.body;
 
   const exercise = new Exercise({
-    userId,
+    _id,
     date,
     description,
     duration
@@ -273,7 +266,7 @@ app.post("/api/exercise/add", function(req, res, next) {
 
     // otherwise log it on the console and respond
     log("saving \n", {
-      userId,
+      _id,
       date,
       description,
       duration,
@@ -281,7 +274,7 @@ app.post("/api/exercise/add", function(req, res, next) {
       statusTxt: "OK"
     });
     res.send({
-      userId,
+      _id,
       date,
       description,
       duration,

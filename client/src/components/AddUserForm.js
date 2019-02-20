@@ -143,7 +143,7 @@ const UriForm = props => {
           <div>
             <Text color="white">User Added</Text>
             <a
-              href={`/api/exercise/log?${status.usernameFromResponse}`}
+              href={`/api/exercise/log?${status.username}`}
               style={{ color: "yellow" }}
             >
               {`${window.location.origin}/api/exercise/log?${status.userId}`}
