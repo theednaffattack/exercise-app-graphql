@@ -224,9 +224,9 @@ app.post("/api/exercise/new-user", function(req, res, next) {
     });
     res.send({
       username,
-      _id,
-      status: 200,
-      statusTxt: "OK"
+      _id
+      // status: 200,
+      // statusTxt: "OK"
     });
   });
 });
