@@ -7,13 +7,13 @@ import MissingQuery from "./MissingQuery";
 
 class UserFetcher extends Component {
   render() {
-    let { userId } = this.props;
+    let { _id } = this.props;
     return (
       <Box py={3}>
-        {userId ? (
+        {_id ? (
           <Fetch
             method="POST"
-            url={`/api/user?userId=${userId}`}
+            url={`/api/user?_id=${_id}`}
             timeout={5000}
             loader={<Loader />}
           >

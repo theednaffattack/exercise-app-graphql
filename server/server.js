@@ -132,6 +132,7 @@ const callback = function(error, exercise) {
 const exerciseLogGet = function(req, res, next) {
   console.log("view `/api/exercise/log` req object");
   if (!req.query.hasOwnProperty("_id")) {
+    // console.log("whooo" + "\n" + JSON.stringify(req.query, null, 2));
     console.log("reached no _id if statement");
     return res.json({ message: "Expected a `_id` key in this request" });
   }
@@ -146,7 +147,7 @@ const exerciseLogGet = function(req, res, next) {
   }
 
   Exercise.find({
-    _id: _id,
+    userId: _id,
     createdAt: {
       $gte: new Date(from).toISOString(),
       $lte: new Date(to).toISOString()
@@ -242,7 +243,7 @@ app.post("/api/exercise/add", function(req, res, next) {
   let { _id, date, description, duration } = req.body;
 
   const exercise = new Exercise({
-    _id,
+    userId: _id,
     date,
     description,
     duration
@@ -266,7 +267,7 @@ app.post("/api/exercise/add", function(req, res, next) {
 
     // otherwise log it on the console and respond
     log("saving \n", {
-      _id,
+      userId: _id,
       date,
       description,
       duration,
@@ -274,7 +275,7 @@ app.post("/api/exercise/add", function(req, res, next) {
       statusTxt: "OK"
     });
     res.send({
-      _id,
+      userId: _id,
       date,
       description,
       duration,

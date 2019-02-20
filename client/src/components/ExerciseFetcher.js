@@ -15,7 +15,7 @@ import { space } from "rebass/dist/theme";
 export class ExerciseFetcher extends Component {
   state = {
     isLoadingMore: false,
-    userId: queryString.parse(this.props.passProps.location.search).userId,
+    _id: queryString.parse(this.props.passProps.location.search)._id,
     pathname: this.props.passProps.location.pathname,
     search: this.props.passProps.location.search,
     fetchUrl:
@@ -67,15 +67,15 @@ export class ExerciseFetcher extends Component {
     // let {
     //   location: { pathname, search }
     // } = this.props.passProps;
-    let { userId, search, pathname, fetchUrl } = this.state;
+    let { _id, search, pathname, fetchUrl } = this.state;
     return (
       <Fragment>
-        {userId ? (
+        {_id ? (
           <Box width={1 / 2} mx="auto" mt="3">
-            <UserFetcher userId={userId} />
+            <UserFetcher _id={_id} />
             <AddExerciseForm
               onLoadMore={this.loadMoreExercises}
-              userId={userId}
+              _id={_id}
               onError={({ error }) => this.reportError(error)}
             />
           </Box>

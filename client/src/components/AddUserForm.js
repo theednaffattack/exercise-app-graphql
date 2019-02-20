@@ -112,12 +112,12 @@ const UriForm = props => {
     <div>
       <form className="" onSubmit={handleSubmit}>
         <div>
-          {/* <StyledInputLabel htmlFor="userId">User ID</StyledInputLabel> */}
+          {/* <StyledInputLabel htmlFor="_id">User ID</StyledInputLabel> */}
           <StyledInput
             name="username"
             type="text"
             className={`form-control ${errors.username &&
-              touched.userId &&
+              touched._id &&
               "is-invalid"}`}
             value={values.username || ""}
             placeholder="Username"
@@ -146,7 +146,7 @@ const UriForm = props => {
               href={`/api/exercise/log?${status.username}`}
               style={{ color: "yellow" }}
             >
-              {`${window.location.origin}/api/exercise/log?${status.userId}`}
+              {`${window.location.origin}/api/exercise/log?${status._id}`}
             </a>
           </div>
         ) : (
@@ -188,7 +188,7 @@ export default withFormik({
         console.log(data);
         resetForm({});
 
-        navigate(`/exercise/log?userId=${data.userId}`);
+        navigate(`/exercise/log?_id=${data._id}`);
       })
       .catch(error => console.error(error));
     setSubmitting(false);

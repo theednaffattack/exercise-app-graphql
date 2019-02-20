@@ -8,10 +8,10 @@ export const ShowExercises = props => (
   <Flex bg="blue" style={{ minHeight: "100vh" }} flexDirection="column">
     <Text color="white">Peak at state of `ExerciseFetcher`</Text>
     {/* <pre style={{ color: "white" }}>{JSON.stringify(this.state, null, 2)}</pre> */}
-    {props.search && props.search.userId ? (
+    {props.search && props.search._id ? (
       <Box width={1 / 2} mx="auto" mt="3">
-        <UserFetcher userId={props.search.userId} />
-        <AddExerciseForm userId={props.search.userId} />
+        <UserFetcher _id={props.search._id} />
+        <AddExerciseForm _id={props.search._id} />
       </Box>
     ) : (
       <MissingQuery />
